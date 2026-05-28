@@ -199,4 +199,4 @@ client.on("messageCreate", async (message) => {
 // -------------------------------
 // Login
 // -------------------------------
-client.login("YOUR_BOT_TOKEN_HERE");
+client.login(process.env.TOKEN);
