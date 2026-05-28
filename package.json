@@ -1,12 +1,13 @@
 {
   "name": "russobot",
   "version": "1.0.0",
-  "description": "Simple moderation bot",
+  "description": "Russobot moderation bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js": "14.15.3"
+    "discord.js": "^14.14.1",
+    "fs": "^0.0.1-security"
   }
 }
