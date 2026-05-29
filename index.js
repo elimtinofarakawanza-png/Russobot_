@@ -1,8 +1,8 @@
-const { 
-    Client, 
-    Collection, 
-    GatewayIntentBits, 
-    Partials 
+const {
+    Client,
+    Collection,
+    GatewayIntentBits,
+    Partials
 } = require("discord.js");
 
 const fs = require("fs");
@@ -31,4 +31,44 @@ for (const file of commandFiles) {
 }
 
 // Interaction handler
-client.on("interactionCreate", async interaction
+client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+
+    // Load staff roles
+    let staffRoles = {};
+    if (fs.existsSync("staffroles.json")) {
+        staffRoles = JSON.parse(fs.readFileSync("staffroles.json"));
+    }
+
+    const guildRoles = staffRoles[interaction.guild.id] || [];
+
+    // Admin-only commands
+    if (command.adminOnly) {
+        const hasRole = guildRoles.some(roleID =>
+            interaction.member.roles.cache.has(roleID)
+        );
+
+        if (!hasRole) {
+            return interaction.reply({
+                content: "You must be a **staff member** to use this command.",
+                ephemeral: true
+            });
+        }
+    }
+
+    try {
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        await interaction.reply({
+            content: "There was an error executing this command.",
+            ephemeral: true
+        });
+    }
+});
+
+// Login
+client.login(process.env.TOKEN);
