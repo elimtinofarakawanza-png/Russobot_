@@ -1,3 +1,4 @@
+require("./deploy-commands.js");
 const {
     Client,
     Collection,
